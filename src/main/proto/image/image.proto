@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package image;
+
+option java_package = "com.proto.image";
+option java_multiple_files = true;
+
+message Roi {
+    int32 x = 1;
+    int32 y = 2;
+    int32 width = 3;
+    int32 height = 4;
+}
+
+message CopyImageRequest {
+    string input_file = 1;
+    string file_location = 2;
+    string options = 3;
+}
+
+message CopyImageResponse {
+    string result = 1;
+}
+
+message ReadImageRequest {
+    string file_location = 1;
+    Roi roi = 2;
+    string options = 3;
+}
+
+message ReadImageResponse {
+    string result = 1;
+}
+
+service ImageService {
+    // Bidi Streaming
+    rpc CopyImageBidi(stream CopyImageRequest) returns (stream CopyImageResponse) {};
+    rpc ReadImageBidi(stream ReadImageRequest) returns (stream ReadImageResponse) {};
+    //Unary request streaming
+    rpc CopyImageReqStream(stream CopyImageRequest) returns (CopyImageResponse) {};
+    rpc ReadImageReqStream(stream ReadImageRequest) returns (ReadImageResponse) {};
+    //Unary async call
+    //Returns UNAVAILABLE if server is down.
+    //Message payload must not be empty
+    rpc CopyImage(CopyImageRequest) returns (CopyImageResponse) {};
+    rpc ReadImage(ReadImageRequest) returns (ReadImageResponse) {};
+
+}
