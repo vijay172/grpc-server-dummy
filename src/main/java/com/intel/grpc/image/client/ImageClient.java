@@ -28,9 +28,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class ImageClient {
-    private ManagedChannel channel;
     public ImageClient(String host, int port) {
-        channel = ManagedChannelBuilder.forAddress(host, port)
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext() //avoid ssl issues
                 .build();
     }
@@ -40,7 +39,7 @@ public class ImageClient {
         //input arguments
         String inputFile = args[0];//"test.txt";
         String fileLocation = args[1];//"tmp";
-        String options = args[2];//"test";
+        String options;//"test";
         Roi roi = Roi.newBuilder()
                 .setX(1)
                 .setY(2)
@@ -162,7 +161,7 @@ public class ImageClient {
         try {
             //asynchronous client
             final ImageServiceGrpc.ImageServiceStub asyncImageClient = ImageServiceGrpc.newStub(channel);
-            String options = "";
+            String options;
             final StreamObserver<CopyImageRequest> requestCopyObserver = asyncImageClient
                     .withDeadline(Deadline.after(deadlineDuration, TimeUnit.SECONDS)) //change to Milliseconds to simulate deadline exception
                     .copyImageReqStream(new StreamObserver<CopyImageResponse>() {
@@ -247,7 +246,7 @@ public class ImageClient {
         Map<String, ArrayList<String>> requestMap = new HashMap<>();
         final ImageServiceGrpc.ImageServiceStub asyncImageClient = ImageServiceGrpc.newStub(channel);
         try {
-            String options = "";
+            String options;
             //how to handle copyImage response
             final StreamObserver<CopyImageRequest> requestCopyObserver = asyncImageClient
                     .withDeadline(Deadline.after(deadlineDuration, TimeUnit.SECONDS)) //change to Milliseconds to simulate deadline exception

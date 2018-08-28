@@ -9,13 +9,13 @@ import com.proto.image.Roi;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
-public class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
+class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
 
     @Override
     public StreamObserver<CopyImageRequest> copyImageReqStream(StreamObserver<CopyImageResponse> responseObserver) {
         System.out.println("Entered copyImageReqStream()");
 
-        StreamObserver<CopyImageRequest> requestObserver = new StreamObserver<CopyImageRequest>() {
+        return new StreamObserver<CopyImageRequest>() {
             @Override
             public void onNext(CopyImageRequest request) {
                 String inputFile = request.getInputFile();
@@ -47,13 +47,12 @@ public class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
                 responseObserver.onCompleted();
             }
         };
-        return requestObserver;
     }
 
     @Override
     public StreamObserver<ReadImageRequest> readImageReqStream(StreamObserver<ReadImageResponse> responseObserver) {
         System.out.println("Entered readImageReqStream()");
-        StreamObserver<ReadImageRequest> requestObserver = new StreamObserver<ReadImageRequest>() {
+        return new StreamObserver<ReadImageRequest>() {
             @Override
             public void onNext(ReadImageRequest request) {
                 String fileLocation = request.getFileLocation();
@@ -83,14 +82,13 @@ public class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
                 //responseObserver.onCompleted();
             }
         };
-        return requestObserver;
     }
 
     @Override
     public StreamObserver<CopyImageRequest> copyImageBidi(StreamObserver<CopyImageResponse> responseObserver) {
         System.out.println("Entered copyImageBidi()");
 
-        StreamObserver<CopyImageRequest> requestObserver = new StreamObserver<CopyImageRequest>() {
+        return new StreamObserver<CopyImageRequest>() {
             @Override
             public void onNext(CopyImageRequest request) {
                 String inputFile = request.getInputFile();
@@ -121,13 +119,12 @@ public class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
                 responseObserver.onCompleted();
             }
         };
-        return requestObserver;
     }
 
     @Override
     public StreamObserver<ReadImageRequest> readImageBidi(StreamObserver<ReadImageResponse> responseObserver) {
         System.out.println("Entered readImageBidi()");
-        StreamObserver<ReadImageRequest> requestObserver = new StreamObserver<ReadImageRequest>() {
+        return new StreamObserver<ReadImageRequest>() {
             @Override
             public void onNext(ReadImageRequest request) {
                 String fileLocation = request.getFileLocation();
@@ -156,7 +153,6 @@ public class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
                 responseObserver.onCompleted();
             }
         };
-        return requestObserver;
     }
 
     public void copyImage(CopyImageRequest request, StreamObserver<CopyImageResponse> responseObserver) {
@@ -195,7 +191,7 @@ public class ImageServiceImpl extends ImageServiceGrpc.ImageServiceImplBase {
             responseObserver.onError(
                     Status.INTERNAL
                             .withDescription("Internal Error")
-                            .augmentDescription("Error details:" + response)
+                            .augmentDescription("Error details:")
                             .asRuntimeException()
             );
         }
